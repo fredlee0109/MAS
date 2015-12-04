@@ -2,6 +2,8 @@
 * @author Fred Lee
 */
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -169,8 +171,10 @@ public class MAS {
         }
         HashSet<Integer> maxInNodes = new HashSet<Integer>();
         int firstNode = 1;
+        Queue<Integer> rq = new LinkedList<Integer>();
+
         maxInNodes.add(firstNode);
-        for (Integer i : rin) {
+        for (Integer i : rin.keySet()) {
             if (rin.get(i).size() > rin.get(firstNode).size()) {
                 maxInNodes.clear();
                 maxInNodes.add(i);
@@ -180,7 +184,12 @@ public class MAS {
             }
         }
         if (maxInNodes.size() > 1) {
-
+            ArrayList<Integer> sortedList = new ArrayList<Integer>(maxInNodes);
+            Collections.sort(sortedList);
+            for (int i=0;i<sortedList.size();i++) {
+                rq.add(sortedList.get(i));
+            }
+            maxInNodes.clear();
         }
     }
 
