@@ -3,6 +3,7 @@
 */
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.io.FileReader;
@@ -20,6 +21,7 @@ public class MAS {
     HashMap<Integer, HashSet<Integer>> in = new HashMap<Integer, HashSet<Integer>>();
     int inst;
     boolean one = false;
+    Queue<Integer> q = new LinkedList<Integer>();
     final int total = 621;
 
     public MAS() {
@@ -140,7 +142,6 @@ public class MAS {
     }
 
     public void breakTie(HashSet<Integer> set) {
-        int[][] rtable = new int[set.size()][2];
         HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
@@ -165,6 +166,21 @@ public class MAS {
                     }
                 }
             }
+        }
+        HashSet<Integer> maxInNodes = new HashSet<Integer>();
+        int firstNode = 1;
+        maxInNodes.add(firstNode);
+        for (Integer i : rin) {
+            if (rin.get(i).size() > rin.get(firstNode).size()) {
+                maxInNodes.clear();
+                maxInNodes.add(i);
+                firstNode = i;
+            } else if (rin.get(i).size() == rin.get(firstNode).size()) {
+                maxInNodes.add(i);
+            }
+        }
+        if (maxInNodes.size() > 1) {
+
         }
     }
 
