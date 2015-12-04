@@ -9,9 +9,19 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class MAS {
+
     int[][] table;
     int[][] graph;
+    int inst;
+    boolean one = false;
+    final int total = 621;
+
     public MAS() {
+        one = false;
+    }
+    public MAS(int inst) {
+        one = true;
+        this.inst = inst;
     }
     /**
     * For visualization of the graph data
@@ -41,7 +51,7 @@ public class MAS {
         BufferedReader br = null;
         try {
             String sCurrentLine = "";
-            br = new BufferedReader(new FileReader("instances/101.in"));
+            br = new BufferedReader(new FileReader("instances/" + inst + ".in"));
 
             int count = Integer.parseInt(br.readLine().replaceAll("\\s+",""));
 
@@ -84,7 +94,7 @@ public class MAS {
         // visualizeTable(table);
     }
     public static void main(String[] args) {
-        MAS algo = new MAS();
+        MAS algo = new MAS(101);
         algo.setUp();
     }
 }
