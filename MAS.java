@@ -118,18 +118,6 @@ public class MAS {
                 table[i][1] += graph[j][i];
             }
         }
-        // This was for testing in, out hashmaps
-        // table = new int[graph.length][2];
-        // for (int i = 0; i < graph.length; i++) {
-        //     if (out.get(i) != null) {
-        //         table[i][0] = out.get(i).size();
-        //     }
-        // }
-        // for (int i = 0; i < graph.length; i++) {
-        //     if (in.get(i) != null) {
-        //         table[i][1] = in.get(i).size();
-        //     }
-        // }
     }
 
     public void algo() {
@@ -156,11 +144,33 @@ public class MAS {
 
     public void breakTie(HashSet<Integer> set) {
         int[][] rtable = new int[set.size()][2];
+        HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
+        HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
             for (Integer j : set) {
-                rtable[i][0] += graph[i][j];
-                rtable[i][1] += graph[j][i];
+                if (in.get(i) != null && in.get(contains(j))) {
+                    if (rin.containsKey(i)) {
+                        rin.get(i).add(j);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(j);
+                        rin.put(i, temp);
+                    }
+                }
+                if (out.get(i) != null && out.get(contains(j))) {
+                    if (rin.containsKey(i)) {
+                        rin.get(i).add(j);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(j);
+                        rin.put(i, temp);
+                    }
+                }
             }
+        }
+        for (Integer i : set) {
+            System.out.println(rout.get(i));
+            System.out.println(rin.get(i));
         }
     }
 
