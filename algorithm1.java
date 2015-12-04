@@ -26,7 +26,7 @@ public class algorithm1 {
     */
     public static void visualizeTable(int[][] graph) {
            for (int i = 0; i < graph.length; i++) {
-                for (int j = 0; j < graph.length; j++) {
+                for (int j = 0; j < graph[0].length; j++) {
                     System.out.print(graph[i][j] + " ");
                 }
                 System.out.println();
@@ -49,7 +49,7 @@ public class algorithm1 {
                 }
             }
             algorithm1.run(graph);
-            algorithm1.visualizeData(graph);
+            // algorithm1.visualizeData(graph);
             // algorithm1.visualizeTable(graph);
         } catch (IOException e) {
             System.out.println("Error");
@@ -65,7 +65,19 @@ public class algorithm1 {
     }
 
     public static void run(int[][] graph) {
-
+        int[][] table = new int[graph.length][2];
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph.length; j++) {
+                table[i][0] += graph[i][j];
+            }
+        }
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph.length; j++) {
+                table[i][1] += graph[j][i];
+            }
+        }
+        // algorithm1.visualizeData(graph);
+        // algorithm1.visualizeTable(table);
     }
     public static void main(String[] args) {
         algorithm1.setUp();
