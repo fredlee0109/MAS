@@ -118,6 +118,7 @@ public class MAS {
                 table[i][1] += graph[j][i];
             }
         }
+        algo();
     }
 
     public void algo() {
@@ -134,11 +135,7 @@ public class MAS {
             }
         }
         if (minIndexes.size() > 1) {
-            if (min == 0) {
-
-            } else {
-                breakTie(minIndexes);
-            }
+            breakTie(minIndexes);
         }
     }
 
@@ -148,7 +145,8 @@ public class MAS {
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
             for (Integer j : set) {
-                if (in.get(i) != null && in.get(contains(j))) {
+                System.out.println(i + " " + j);
+                if (in.get(i) != null && in.get(i).contains(j)) {
                     if (rin.containsKey(i)) {
                         rin.get(i).add(j);
                     } else {
@@ -157,7 +155,7 @@ public class MAS {
                         rin.put(i, temp);
                     }
                 }
-                if (out.get(i) != null && out.get(contains(j))) {
+                if (out.get(i) != null && out.get(i).contains(j)) {
                     if (rin.containsKey(i)) {
                         rin.get(i).add(j);
                     } else {
@@ -167,10 +165,6 @@ public class MAS {
                     }
                 }
             }
-        }
-        for (Integer i : set) {
-            System.out.println(rout.get(i));
-            System.out.println(rin.get(i));
         }
     }
 
