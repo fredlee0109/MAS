@@ -2,6 +2,9 @@
 * @author Fred Lee
 */
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.HashMap;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.lang.StringBuilder;
@@ -12,6 +15,9 @@ public class MAS {
 
     int[][] table;
     int[][] graph;
+    LinkedList<Integer> answer = new LinkedList<Integer>();
+    HashMap<Integer, HashSet<Integer>> out = new HashMap<Integer, HashSet<Integer>>();
+    HashMap<Integer, HashSet<Integer>> in = new HashMap<Integer, HashSet<Integer>>();
     int inst;
     boolean one = false;
     final int total = 621;
@@ -26,7 +32,7 @@ public class MAS {
     /**
     * For visualization of the graph data
     */
-    public void visualizeData(int[][] graph) {
+    public void visualizeData() {
            for (int i = 0; i < graph.length; i++) {
                 for (int j = 0; j < graph.length; j++) {
                     System.out.print(graph[i][j] + " ");
@@ -38,13 +44,24 @@ public class MAS {
     /**
     * For visualization of the graph table
     */
-    public void visualizeTable(int[][] graph) {
-           for (int i = 0; i < graph.length; i++) {
-                for (int j = 0; j < graph[0].length; j++) {
-                    System.out.print(graph[i][j] + " ");
+    public void visualizeTable() {
+           for (int i = 0; i < table.length; i++) {
+                for (int j = 0; j < table[0].length; j++) {
+                    System.out.print(table[i][j] + " ");
                 }
                 System.out.println();
             }
+    }
+
+    public void delete_1_cycles() {
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (graph[i][j] == 1 && graph[j][i] == 1) {
+                    graph[i][j] = 0;
+                    graph[j][i] = 0;
+                }
+            }
+        }
     }
 
     public void setUp() {
@@ -62,9 +79,8 @@ public class MAS {
                     graph[i][j] = Character.getNumericValue(sCurrentLine.charAt(j));
                 }
             }
-            run(graph);
-            // visualizeData(graph);
-            // visualizeTable(graph);
+            delete_1_cycles();
+            makeTable(graph);
         } catch (IOException e) {
             System.out.println("Error");
         } finally {
@@ -78,23 +94,78 @@ public class MAS {
         }
     }
 
-    public void run(int[][] graph) {
+    public void makeTable(int[][] graph) {
         table = new int[graph.length][2];
         for (int i = 0; i < graph.length; i++) {
             for (int j = 0; j < graph.length; j++) {
+                if (graph[i][j] == 1) {
+                    if (out.containsKey(i)) {
+                        out.get(i).add(j);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(j);
+                        out.put(i, temp);
+                    }
+                    if (in.containsKey(j)) {
+                        in.get(j).add(i);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(i);
+                        in.put(j, temp);
+                    }
+                }
                 table[i][0] += graph[i][j];
-            }
-        }
-        for (int i = 0; i < graph.length; i++) {
-            for (int j = 0; j < graph.length; j++) {
                 table[i][1] += graph[j][i];
             }
         }
-        // visualizeData(graph);
-        // visualizeTable(table);
+        // This was for testing in, out hashmaps
+        // table = new int[graph.length][2];
+        // for (int i = 0; i < graph.length; i++) {
+        //     if (out.get(i) != null) {
+        //         table[i][0] = out.get(i).size();
+        //     }
+        // }
+        // for (int i = 0; i < graph.length; i++) {
+        //     if (in.get(i) != null) {
+        //         table[i][1] = in.get(i).size();
+        //     }
+        // }
     }
+
+    public void algo() {
+        int min = table[0][0];
+        HashSet<Integer> minIndexes = new HashSet<Integer>();
+        minIndexes.add(0);
+        for (int i = 1; i < table.length; i++) {
+            if (min == table[i][0]) {
+                minIndexes.add(i);
+            } else if (min > table[i][0]) {
+                minIndexes.clear();
+                minIndexes.add(i);
+                min = table[i][0];
+            }
+        }
+        if (minIndexes.size() > 1) {
+            if (min == 0) {
+
+            } else {
+                breakTie(minIndexes);
+            }
+        }
+    }
+
+    public void breakTie(HashSet<Integer> set) {
+        int[][] rtable = new int[set.size()][2];
+        for (Integer i : set) {
+            for (Integer j : set) {
+                rtable[i][0] += graph[i][j];
+                rtable[i][1] += graph[j][i];
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        MAS algo = new MAS(101);
-        algo.setUp();
+        MAS foo = new MAS(101);
+        foo.setUp();
     }
 }
