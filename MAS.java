@@ -190,7 +190,32 @@ public class MAS {
                 rq.add(sortedList.get(i));
             }
             maxInNodes.clear();
+        } else {
+            rq.add(firstNode);
         }
+        for (Integer i : maxInNodes) {
+            set.remove(i);
+        }
+        while (!set.isEmpty()) {
+            int it = rq.poll();
+            HashSet<Integer> nodesToIt = rin.get(it);
+            if (nodesToIt != null) {
+                if (nodesToIt.size() == 1) {
+                    for (Integer i : nodesToIt) {
+                        rq.add(i);
+                        set.remove(i);
+                    }
+                } else {
+
+                }
+            }
+        }
+    }
+
+    public Queue<Integer> sort(HashSet<Integer> set, HashMap<Integer, HashSet<Integer>> rin, 
+        HashMap<Integer, HashSet<Integer>> rout) {
+        HashSet<Integer> 
+        for ()
     }
 
     public static void main(String[] args) {
