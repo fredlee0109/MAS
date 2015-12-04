@@ -13,6 +13,10 @@ import java.io.BufferedReader;
 import java.lang.StringBuilder;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Iterator;
+
 
 public class MAS {
 
@@ -184,14 +188,53 @@ public class MAS {
             }
         }
         if (maxInNodes.size() > 1) {
-            ArrayList<Integer> sortedList = new ArrayList<Integer>(maxInNodes);
-            Collections.sort(sortedList);
-            for (int i=0;i<sortedList.size();i++) {
-                rq.add(sortedList.get(i));
+            HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
+            //generate a chartMap mapping from node to number of outs
+            for (Integer i : maxInNodes) {
+                chartMap.put(i, rout.get(i).size());
+            }
+            //sort the charMap by its value
+
+            chartMap = sortHashMapByValues(chartMap);
+
+            for (Integer i : chartMap.keySet()) {
+                rq.add(i);
             }
             maxInNodes.clear();
         }
     }
+
+    public static LinkedHashMap sortHashMapByValues(HashMap<Integer, Integer> aMap) {
+       List mapKeys = new ArrayList(aMap.keySet());
+       List mapValues = new ArrayList(aMap.values());
+       Collections.sort(mapValues);
+       Collections.sort(mapKeys);
+
+       LinkedHashMap sortedMap = new LinkedHashMap();
+
+       Iterator valueIt = mapValues.iterator();
+       while (valueIt.hasNext()) {
+           Integer val = (Integer)valueIt.next();
+           Iterator keyIt = mapKeys.iterator();
+
+           while (keyIt.hasNext()) {
+               Object key = keyIt.next();
+               Integer comp1 = aMap.get(key);
+               Integer comp2 = val;
+
+               if (comp1.equals(comp2)){
+                   aMap.remove(key);
+                   mapKeys.remove(key);
+                   sortedMap.put((Integer)key, (Integer)val);
+                   break;
+               }
+
+           }
+
+       }
+       return sortedMap;
+    }    
+  
 
     public static void main(String[] args) {
         MAS foo = new MAS(101);
