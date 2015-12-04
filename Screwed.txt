@@ -1,0 +1,50 @@
+We can notice a few things by observing Maximum...Tree
+
+<Observation>
+1. A cycle(polygon) can be viewed as a LEAGUE, in which they have the same ranking in terms of "Global Ranking"
+   
+   For Example, A->B->C->D->A means A,B,C,and D are of same ranking. 
+
+2. This problem is Rudrata Path, a NP problem which takes exponential time to compute.
+
+3. NP problems can be reduced to any other NP problems, so we have to look at the list of NP problems.
+
+
+<Suggestion for the 3 hard cases>
+
+1. Number should be 100.
+
+   Example
+
+   100
+   0 1 .......................................................... 1
+   1 0 1 1 1 0 1 0 1 0 .......................................... 1
+   .
+   .
+   .
+   .
+   .
+   .
+   
+
+   100 * 100 matrix
+
+
+2. I should model the hard case so that you CANNOT smartly select one node to make it faster to solve the problem by starting with the node.
+   In other words, the graph should be "Symmetric"  
+
+
+<Suggestion for the Algorithm>
+
+This part is brainstorming part, it may work, but it may not work too.
+
+	i) 
+
+		1. Look for cycles, and turn cycle into one node.
+
+		2. Now we removed all the cycles, the graph may become a DAG. 
+
+		3. Linearize, and toplogical sort.
+
+		4. nodes within cycle will be given the same rank.
+

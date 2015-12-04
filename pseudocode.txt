@@ -1,0 +1,24 @@
+Iterate through the 2D array and delete -> <- edges. (ie. a->b, b->a)
+Then, create this table, calculating the number of out or in edges from or to each vertex:
+	out 	in 
+1 
+2
+3
+4
+5
+.
+.
+.
+Then find out vertices with least number of outs. If there are multiple, this is how we break the tie:
+1) See if there are edges between any of these vertices. If there are, we run this algorithm with them, and put them first in our Queue in order of how the algorithm returned.
+2) With the remaining vertices, add them to our queue by:
+	a) Minimum Out #
+	b) Maximum In #
+	c) Random
+a = Q.poll()
+answer.append(a)
+for (i, a) in E:
+	for non duplicates, break the tie like above and add to the queue.
+return answer
+
+
