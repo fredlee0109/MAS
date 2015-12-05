@@ -421,7 +421,7 @@ public class MAS {
             MAS foo;
             PrintWriter writer = new PrintWriter("easylife.out");
             for (int i = 1; i <= 621; i++) {
-                System.out.println(i);
+                // System.out.println(i);
                 foo = new MAS(i);
                 foo.setUp();
                 for (Integer k : foo.realanswer) {
