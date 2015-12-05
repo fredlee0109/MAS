@@ -129,7 +129,43 @@ public class MAS {
         algo();
     }
 
+    public HashSet<Integer> getMin(HashSet<Integer> set) {
+        HashSet<Integer> minIndexes = new HashSet<Integer>();
+        HashMap<Integer, Integer> count = new HashMap<Integer, Integer>();
+        for (Integer i : set) {
+            for (Integer j : set) {
+                if (out.containsKey(i) && out.get(i).contains(j)) {
+                    if (count.containsKey(i)) {
+                        count.put(i, count.get(i) + 1);
+                    } else {
+                        count.put(i, 1);
+                    }
+                }
+            }
+        }
+        int min = 1;
+        for (Integer i : count.keySet()) {
+            min = i;
+            break;
+        }
+        minIndexes.add(min);
+        for (Integer i : count.keySet()) {
+            if (count.get(i) == count.get(min)) {
+                minIndexes.add(i);
+            } else if (count.get(i) < count.get(min)) {
+                minIndexes.clear();
+                minIndexes.add(i);
+                min = i;
+            }
+        }
+        return minIndexes;
+    }
+
     public void algo() {
+        HashSet<Integer> totalSet = new HashSet<Integer>();
+        for (int i = 0; i < graph.length; i++) {
+            totalSet.add(i);
+        }
         int min = table[0][0];
         HashSet<Integer> minIndexes = new HashSet<Integer>();
         minIndexes.add(0);
@@ -142,9 +178,48 @@ public class MAS {
                 min = table[i][0];
             }
         }
-        if (minIndexes.size() > 1) {
+        System.out.println(minIndexes);
+        if (minIndexes.size() == 1) {
+            for (Integer i : minIndexes) {
+                q.add(i);
+            }
+        } else {
             breakTie(minIndexes);
         }
+        System.out.println(q);
+
+        while (!totalSet.isEmpty()) {
+            if (totalSet.size() == 1) {
+                for (Integer i : totalSet) {
+                    q.add(i);
+                }
+            }
+            if (q.isEmpty()) {
+                HashSet<Integer> set = getMin(totalSet);
+                if (set.size() == 1) {
+                    for (Integer i : set) {
+                        q.add(i);
+                    }
+                } else {
+                    recursive(set);
+                }
+            } else {
+                int p = q.poll();
+                totalSet.remove(p);
+                answer.add(p);
+                HashSet<Integer> tempSet = out.get(p);
+                if (tempSet != null && tempSet.size() > 0) {
+                    if (tempSet.size() == 1) {
+                        for (Integer i : tempSet) {
+                            q.add(i);
+                        }
+                    } else {
+                        recursive(tempSet);
+                    }
+                }
+            }
+        }
+        System.out.println(answer);
     }
 
     public void recursive(HashSet<Integer> set) {
@@ -156,7 +231,6 @@ public class MAS {
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
             for (Integer j : set) {
-                System.out.println(i + " " + j);
                 if (in.get(i) != null && in.get(i).contains(j)) {
                     noEdge = false;
                     if (rin.containsKey(i)) {
@@ -186,12 +260,20 @@ public class MAS {
             }
             HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
             for (Integer i : set) {
-                chartMap.put(i, rout.get(i).size());
+                if (!rout.containsKey(i)) {
+                    chartMap.put(i, 0);
+                } else {
+                    chartMap.put(i, rout.get(i).size());
+                }
             }
             rq = sortHashMapByValuesReturnQ(rq, chartMap);
             chartMap = new HashMap<Integer, Integer>();
             for (Integer i : set) {
-                chartMap.put(i, rin.get(i).size());
+                if (!rout.containsKey(i)) {
+                    chartMap.put(i, 0);
+                } else {
+                    chartMap.put(i, rin.get(i).size());
+                }
             }
             rq = sortHashMapByValuesReturnQ(rq, chartMap);
             for (Integer i : rq) {
@@ -271,7 +353,6 @@ public class MAS {
         }
         HashSet<Integer> maxInNodes = new HashSet<Integer>();
         int firstNode = 1;
-        Queue<Integer> rq = new LinkedList<Integer>();
 
         maxInNodes.add(firstNode);
         for (Integer i : rin.keySet()) {
@@ -284,33 +365,13 @@ public class MAS {
             }
         }
         if (maxInNodes.size() > 1) {
-            HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
-            for (Integer i : maxInNodes) {
-                chartMap.put(i, rout.get(i).size());
-            }
-            // rq = sortHashMapByValuesReturnQ(chartMap);
-
-            maxInNodes.clear();
+            recursive(maxInNodes);
         } else {
-            rq.add(firstNode);
+            q.add(firstNode);
         }
         for (Integer i : maxInNodes) {
             set.remove(i);
         }
-        // while (!set.isEmpty()) {
-        //     int it = rq.poll();
-        //     HashSet<Integer> nodesToIt = rin.get(it);
-        //     if (nodesToIt != null) {
-        //         if (nodesToIt.size() == 1) {
-        //             for (Integer i : nodesToIt) {
-        //                 rq.add(i);
-        //                 set.remove(i);
-        //             }
-        //         } else {
-
-        //         }
-        //     }
-        // }
     }
 
     public static LinkedHashMap sortHashMapByValues(HashMap<Integer, Integer> aMap) {
@@ -376,7 +437,6 @@ public class MAS {
        return q;
     } 
   
-
     public static void main(String[] args) {
         MAS foo = new MAS(101);
         foo.setUp();
