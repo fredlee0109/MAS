@@ -166,19 +166,20 @@ public class MAS {
         for (int i = 0; i < graph.length; i++) {
             totalSet.add(i);
         }
-        int min = table[0][0];
-        HashSet<Integer> minIndexes = new HashSet<Integer>();
-        minIndexes.add(0);
-        for (int i = 1; i < table.length; i++) {
-            if (min == table[i][0]) {
-                minIndexes.add(i);
-            } else if (min > table[i][0]) {
-                minIndexes.clear();
-                minIndexes.add(i);
-                min = table[i][0];
-            }
-        }
-        System.out.println(minIndexes);
+        HashSet<Integer> minIndexes = getMin(totalSet);
+        // int min = table[0][0];
+        // HashSet<Integer> minIndexes = new HashSet<Integer>();
+        // minIndexes.add(0);
+        // for (int i = 1; i < table.length; i++) {
+        //     if (min == table[i][0]) {
+        //         minIndexes.add(i);
+        //     } else if (min > table[i][0]) {
+        //         minIndexes.clear();
+        //         minIndexes.add(i);
+        //         min = table[i][0];
+        //     }
+        // }
+        System.out.println("minIndexes is: " + minIndexes);
         if (minIndexes.size() == 1) {
             for (Integer i : minIndexes) {
                 q.add(i);
@@ -186,6 +187,7 @@ public class MAS {
         } else {
             breakTie(minIndexes);
         }
+        System.out.print("q is: ");
         System.out.println(q);
 
         while (!totalSet.isEmpty()) {
@@ -218,6 +220,9 @@ public class MAS {
                     }
                 }
             }
+        }
+        for (int i = 0; i < answer.size(); i++) {
+            answer.add(answer.poll() + 1);
         }
         System.out.println(answer);
     }
@@ -327,6 +332,8 @@ public class MAS {
     }
 
     public void breakTie(HashSet<Integer> set) {
+        System.out.println("from here");
+        System.out.println(set);
         HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
@@ -368,9 +375,6 @@ public class MAS {
             recursive(maxInNodes);
         } else {
             q.add(firstNode);
-        }
-        for (Integer i : maxInNodes) {
-            set.remove(i);
         }
     }
 
