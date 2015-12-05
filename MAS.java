@@ -195,11 +195,13 @@ public class MAS {
             }
             //sort the charMap by its value
 
-            chartMap = sortHashMapByValues(chartMap);
+            // chartMap = sortHashMapByValues(chartMap);
 
-            for (Integer i : chartMap.keySet()) {
-                rq.add(i);
-            }
+            // for (Integer i : chartMap.keySet()) {
+            //     rq.add(i);
+            // }
+            rq = sortHashMapByValuesReturnQ(chartMap);
+
             maxInNodes.clear();
         } else {
             rq.add(firstNode);
@@ -221,12 +223,6 @@ public class MAS {
                 }
             }
         }
-    }
-
-    public Queue<Integer> sort(HashSet<Integer> set, HashMap<Integer, HashSet<Integer>> rin, 
-        HashMap<Integer, HashSet<Integer>> rout) {
-        HashSet<Integer> 
-        for ()
     }
 
     public static LinkedHashMap sortHashMapByValues(HashMap<Integer, Integer> aMap) {
@@ -259,6 +255,38 @@ public class MAS {
        }
        return sortedMap;
     }    
+
+
+    public static Queue sortHashMapByValuesReturnQ(HashMap<Integer, Integer> aMap) {
+       List mapKeys = new ArrayList(aMap.keySet());
+       List mapValues = new ArrayList(aMap.values());
+       Collections.sort(mapValues);
+       Collections.sort(mapKeys);
+
+       Queue<Integer> q = new LinkedList<Integer>();
+
+       Iterator valueIt = mapValues.iterator();
+       while (valueIt.hasNext()) {
+           Integer val = (Integer)valueIt.next();
+           Iterator keyIt = mapKeys.iterator();
+
+           while (keyIt.hasNext()) {
+               Object key = keyIt.next();
+               Integer comp1 = aMap.get(key);
+               Integer comp2 = val;
+
+               if (comp1.equals(comp2)){
+                   aMap.remove(key);
+                   mapKeys.remove(key);
+                   q.add((Integer)key);
+                   break;
+               }
+
+           }
+
+       }
+       return q;
+    }  
   
 
     public static void main(String[] args) {
