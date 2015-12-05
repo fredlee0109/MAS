@@ -147,12 +147,108 @@ public class MAS {
         }
     }
 
-    public void breakTie(HashSet<Integer> set) {
+    public void recursive(HashSet<Integer> set) {
+        if (set.isEmpty()) {
+            return;
+        }
+        boolean noEdge = true;
         HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
         for (Integer i : set) {
             for (Integer j : set) {
                 System.out.println(i + " " + j);
+                if (in.get(i) != null && in.get(i).contains(j)) {
+                    noEdge = false;
+                    if (rin.containsKey(i)) {
+                        rin.get(i).add(j);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(j);
+                        rin.put(i, temp);
+                    }
+                }
+                if (out.get(i) != null && out.get(i).contains(j)) {
+                    noEdge = false;
+                    if (rin.containsKey(i)) {
+                        rin.get(i).add(j);
+                    } else {
+                        HashSet<Integer> temp = new HashSet<Integer>();
+                        temp.add(j);
+                        rin.put(i, temp);
+                    }
+                }
+            }
+        }
+        if (noEdge) {
+            Queue<Integer> rq = new LinkedList<Integer>();
+            for (Integer i : set) {
+                rq.add(i);
+            }
+            HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
+            for (Integer i : set) {
+                chartMap.put(i, rout.get(i).size());
+            }
+            rq = sortHashMapByValuesReturnQ(rq, chartMap);
+            chartMap = new HashMap<Integer, Integer>();
+            for (Integer i : set) {
+                chartMap.put(i, rin.get(i).size());
+            }
+            rq = sortHashMapByValuesReturnQ(rq, chartMap);
+            for (Integer i : rq) {
+                q.add(i);
+            }
+        } else {
+            HashSet<Integer> maxInNodes = new HashSet<Integer>();
+            Queue<Integer> rq = new LinkedList<Integer>();
+            int firstNode = 1;
+            for (Integer i : set) {
+                firstNode = i;
+                break;
+            }
+            maxInNodes.add(firstNode);
+            for (Integer i : rin.keySet()) {
+                if (rin.get(i).size() > rin.get(firstNode).size()) {
+                    maxInNodes.clear();
+                    maxInNodes.add(i);
+                    firstNode = i;
+                } else if (rin.get(i).size() == rin.get(firstNode).size()) {
+                    maxInNodes.add(i);
+                }
+            }
+            if (maxInNodes.size() == 1) {
+                for (Integer i : maxInNodes) {
+                    q.add(i);
+                    set.remove(i);
+                }
+                recursive(set);
+            } else {
+                for (Integer i : maxInNodes) {
+                    rq.add(i);
+                    set.remove(i);
+                }
+                HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
+                for (Integer i : set) {
+                    chartMap.put(i, rout.get(i).size());
+                }
+                rq = sortHashMapByValuesReturnQ(rq, chartMap);
+                chartMap = new HashMap<Integer, Integer>();
+                for (Integer i : set) {
+                    chartMap.put(i, rin.get(i).size());
+                }
+                rq = sortHashMapByValuesReturnQ(rq, chartMap);
+                for (Integer i : rq) {
+                    q.add(i);
+                }
+                recursive(set);
+            }
+        }
+    }
+
+    public void breakTie(HashSet<Integer> set) {
+        HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
+        HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
+        for (Integer i : set) {
+            for (Integer j : set) {
                 if (in.get(i) != null && in.get(i).contains(j)) {
                     if (rin.containsKey(i)) {
                         rin.get(i).add(j);
@@ -189,18 +285,10 @@ public class MAS {
         }
         if (maxInNodes.size() > 1) {
             HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
-            //generate a chartMap mapping from node to number of outs
             for (Integer i : maxInNodes) {
                 chartMap.put(i, rout.get(i).size());
             }
-            //sort the charMap by its value
-
-            // chartMap = sortHashMapByValues(chartMap);
-
-            // for (Integer i : chartMap.keySet()) {
-            //     rq.add(i);
-            // }
-            rq = sortHashMapByValuesReturnQ(chartMap);
+            // rq = sortHashMapByValuesReturnQ(chartMap);
 
             maxInNodes.clear();
         } else {
@@ -209,20 +297,20 @@ public class MAS {
         for (Integer i : maxInNodes) {
             set.remove(i);
         }
-        while (!set.isEmpty()) {
-            int it = rq.poll();
-            HashSet<Integer> nodesToIt = rin.get(it);
-            if (nodesToIt != null) {
-                if (nodesToIt.size() == 1) {
-                    for (Integer i : nodesToIt) {
-                        rq.add(i);
-                        set.remove(i);
-                    }
-                } else {
+        // while (!set.isEmpty()) {
+        //     int it = rq.poll();
+        //     HashSet<Integer> nodesToIt = rin.get(it);
+        //     if (nodesToIt != null) {
+        //         if (nodesToIt.size() == 1) {
+        //             for (Integer i : nodesToIt) {
+        //                 rq.add(i);
+        //                 set.remove(i);
+        //             }
+        //         } else {
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
     }
 
     public static LinkedHashMap sortHashMapByValues(HashMap<Integer, Integer> aMap) {
@@ -257,8 +345,8 @@ public class MAS {
     }    
 
 
-    public static Queue sortHashMapByValuesReturnQ(HashMap<Integer, Integer> aMap) {
-       List mapKeys = new ArrayList(aMap.keySet());
+    public Queue sortHashMapByValuesReturnQ(Queue<Integer> qu, HashMap<Integer, Integer> aMap) {
+       List mapKeys = new ArrayList(qu);
        List mapValues = new ArrayList(aMap.values());
        Collections.sort(mapValues);
        Collections.sort(mapKeys);
@@ -286,7 +374,7 @@ public class MAS {
 
        }
        return q;
-    }  
+    } 
   
 
     public static void main(String[] args) {
