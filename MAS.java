@@ -274,11 +274,6 @@ public class MAS {
                 }
             }
         }
-        System.out.println("-----");
-        System.out.println(noEdge);
-        System.out.println(set);
-        System.out.println(rin);
-        System.out.println(rout);
         if (noEdge) {
             Queue<Integer> rq = new LinkedList<Integer>();
             for (Integer i : set) {
@@ -305,7 +300,7 @@ public class MAS {
             for (Integer i : rq) {
                 q.add(i);
             }
-            System.out.println(rq);
+            set.clear();
         } else {
             HashSet<Integer> maxInNodes = new HashSet<Integer>();
             Queue<Integer> rq = new LinkedList<Integer>();
@@ -405,15 +400,15 @@ public class MAS {
     }
 
     public Queue sortHashMapByValuesReturnQ(Queue<Integer> qu, HashMap<Integer, Integer> aMap) {
-       List mapKeys = new ArrayList(qu);
-       List mapValues = new ArrayList(aMap.values());
-       Collections.sort(mapValues);
-       Collections.sort(mapKeys);
-
-       Queue<Integer> q = new LinkedList<Integer>();
-
-       Iterator valueIt = mapValues.iterator();
-       while (valueIt.hasNext()) {
+        List mapKeys = new ArrayList(qu);
+        List mapValues = new ArrayList(aMap.values());
+        Collections.sort(mapValues);
+        Collections.sort(mapKeys);
+ 
+        Queue<Integer> q = new LinkedList<Integer>();
+ 
+        Iterator valueIt = mapValues.iterator();
+        while (valueIt.hasNext()) {
            Integer val = (Integer) valueIt.next();
            Iterator keyIt = mapKeys.iterator();
 
