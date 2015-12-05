@@ -2,6 +2,7 @@
 * @author Fred Lee
 */
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -179,7 +180,6 @@ public class MAS {
         //         min = table[i][0];
         //     }
         // }
-        System.out.println("First min Out set is: " + minIndexes);
         if (minIndexes.size() == 1) {
             for (Integer i : minIndexes) {
                 if (totalSet.contains(i)) {
@@ -209,8 +209,10 @@ public class MAS {
                 }
             } else {
                 int p = q.poll();
-                totalSet.remove(p);
-                answer.add(p);
+                if (totalSet.contains(p)) {
+                    answer.add(p);
+                    totalSet.remove(p);
+                }
                 HashSet<Integer> tempSet = out.get(p);
                 if (tempSet != null && tempSet.size() > 0) {
                     if (tempSet.size() == 1) {
@@ -232,16 +234,23 @@ public class MAS {
         while (it.hasNext()) {
             realanswer.add(it.next());
         }
-        System.out.println(realanswer);
+        // System.out.println(realanswer);
     }
 
     public void recursive(HashSet<Integer> set) {
+        System.out.println(set);
         if (set.isEmpty()) {
             return;
         }
         boolean noEdge = true;
         HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
+        for (Integer i : set) {
+            HashSet<Integer> temp = new HashSet<Integer>();
+            rin.put(i,temp);
+            temp = new HashSet<Integer>();
+            rout.put(i, temp);
+        }
         for (Integer i : set) {
             for (Integer j : set) {
                 if (in.get(i) != null && in.get(i).contains(j)) {
@@ -390,38 +399,6 @@ public class MAS {
         }
     }
 
-    public static LinkedHashMap sortHashMapByValues(HashMap<Integer, Integer> aMap) {
-       List mapKeys = new ArrayList(aMap.keySet());
-       List mapValues = new ArrayList(aMap.values());
-       Collections.sort(mapValues);
-       Collections.sort(mapKeys);
-
-       LinkedHashMap sortedMap = new LinkedHashMap();
-
-       Iterator valueIt = mapValues.iterator();
-       while (valueIt.hasNext()) {
-           Integer val = (Integer)valueIt.next();
-           Iterator keyIt = mapKeys.iterator();
-
-           while (keyIt.hasNext()) {
-               Object key = keyIt.next();
-               Integer comp1 = aMap.get(key);
-               Integer comp2 = val;
-
-               if (comp1.equals(comp2)){
-                   aMap.remove(key);
-                   mapKeys.remove(key);
-                   sortedMap.put((Integer)key, (Integer)val);
-                   break;
-               }
-
-           }
-
-       }
-       return sortedMap;
-    }    
-
-
     public Queue sortHashMapByValuesReturnQ(Queue<Integer> qu, HashMap<Integer, Integer> aMap) {
        List mapKeys = new ArrayList(qu);
        List mapValues = new ArrayList(aMap.values());
@@ -432,29 +409,40 @@ public class MAS {
 
        Iterator valueIt = mapValues.iterator();
        while (valueIt.hasNext()) {
-           Integer val = (Integer)valueIt.next();
+           Integer val = (Integer) valueIt.next();
            Iterator keyIt = mapKeys.iterator();
+           System.out.println("sort");
 
            while (keyIt.hasNext()) {
                Object key = keyIt.next();
                Integer comp1 = aMap.get(key);
                Integer comp2 = val;
-
-               if (comp1.equals(comp2)){
+               if (comp1 != null && comp2 != null && comp1.equals(comp2)) {
                    aMap.remove(key);
                    mapKeys.remove(key);
-                   q.add((Integer)key);
+                   q.add((Integer) key);
                    break;
                }
-
            }
-
        }
        return q;
     } 
   
     public static void main(String[] args) {
-        MAS foo = new MAS(5);
-        foo.setUp();
+        try {
+            MAS foo;
+            PrintWriter writer = new PrintWriter("easylife.out");
+            for (int i = 3; i <= 3; i++) {
+                    foo = new MAS(i);
+                    foo.setUp();
+                    for (Integer k : foo.realanswer) {
+                        writer.print(k + " ");
+                    }
+                    writer.println();
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
     }
 }
