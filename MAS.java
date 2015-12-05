@@ -168,18 +168,6 @@ public class MAS {
 
     public void algo() {
         HashSet<Integer> minIndexes = getMin(totalSet);
-        // int min = table[0][0];
-        // HashSet<Integer> minIndexes = new HashSet<Integer>();
-        // minIndexes.add(0);
-        // for (int i = 1; i < table.length; i++) {
-        //     if (min == table[i][0]) {
-        //         minIndexes.add(i);
-        //     } else if (min > table[i][0]) {
-        //         minIndexes.clear();
-        //         minIndexes.add(i);
-        //         min = table[i][0];
-        //     }
-        // }
         if (minIndexes.size() == 1) {
             for (Integer i : minIndexes) {
                 if (totalSet.contains(i)) {
@@ -264,12 +252,12 @@ public class MAS {
                 }
                 if (out.get(i) != null && out.get(i).contains(j)) {
                     noEdge = false;
-                    if (rin.containsKey(i)) {
-                        rin.get(i).add(j);
+                    if (rout.containsKey(i)) {
+                        rout.get(i).add(j);
                     } else {
                         HashSet<Integer> temp = new HashSet<Integer>();
                         temp.add(j);
-                        rin.put(i, temp);
+                        rout.put(i, temp);
                     }
                 }
             }
@@ -328,7 +316,6 @@ public class MAS {
             } else {
                 for (Integer i : maxInNodes) {
                     rq.add(i);
-                    set.remove(i);
                 }
                 HashMap<Integer, Integer> chartMap = new HashMap<Integer, Integer>();
                 for (Integer i : set) {
@@ -338,6 +325,9 @@ public class MAS {
                 chartMap = new HashMap<Integer, Integer>();
                 for (Integer i : set) {
                     chartMap.put(i, rin.get(i).size());
+                }
+                for (Integer i : maxInNodes) {
+                    set.remove(i);
                 }
                 rq = sortHashMapByValuesReturnQ(rq, chartMap);
                 for (Integer i : rq) {
@@ -411,7 +401,6 @@ public class MAS {
         while (valueIt.hasNext()) {
            Integer val = (Integer) valueIt.next();
            Iterator keyIt = mapKeys.iterator();
-
            while (keyIt.hasNext()) {
                Object key = keyIt.next();
                Integer comp1 = aMap.get(key);
@@ -431,13 +420,14 @@ public class MAS {
         try {
             MAS foo;
             PrintWriter writer = new PrintWriter("easylife.out");
-            for (int i = 3; i <= 3; i++) {
-                    foo = new MAS(i);
-                    foo.setUp();
-                    for (Integer k : foo.realanswer) {
-                        writer.print(k + " ");
-                    }
-                    writer.println();
+            for (int i = 1; i <= 621; i++) {
+                System.out.println(i);
+                foo = new MAS(i);
+                foo.setUp();
+                for (Integer k : foo.realanswer) {
+                    writer.print(k + " ");
+                }
+                writer.println();
             }
             writer.close();
         } catch (IOException e) {
