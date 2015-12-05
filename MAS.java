@@ -22,6 +22,7 @@ public class MAS {
 
     int[][] table;
     int[][] graph;
+    LinkedList<Integer> realanswer = new LinkedList<Integer>();
     LinkedList<Integer> answer = new LinkedList<Integer>();
     HashMap<Integer, HashSet<Integer>> out = new HashMap<Integer, HashSet<Integer>>();
     HashMap<Integer, HashSet<Integer>> in = new HashMap<Integer, HashSet<Integer>>();
@@ -29,6 +30,7 @@ public class MAS {
     boolean one = false;
     Queue<Integer> q = new LinkedList<Integer>();
     final int total = 621;
+    HashSet<Integer> totalSet = new HashSet<Integer>();
 
     public MAS() {
         one = false;
@@ -87,6 +89,9 @@ public class MAS {
                     graph[i][j] = Character.getNumericValue(sCurrentLine.charAt(j));
                 }
             }
+            for (int i = 0; i < graph.length; i++) {
+                totalSet.add(i);
+            }
             delete_1_cycles();
             makeTable(graph);
         } catch (IOException e) {
@@ -133,13 +138,12 @@ public class MAS {
         HashSet<Integer> minIndexes = new HashSet<Integer>();
         HashMap<Integer, Integer> count = new HashMap<Integer, Integer>();
         for (Integer i : set) {
+            count.put(i, 0);
+        }
+        for (Integer i : set) {
             for (Integer j : set) {
                 if (out.containsKey(i) && out.get(i).contains(j)) {
-                    if (count.containsKey(i)) {
-                        count.put(i, count.get(i) + 1);
-                    } else {
-                        count.put(i, 1);
-                    }
+                    count.put(i, count.get(i) + 1);
                 }
             }
         }
@@ -152,7 +156,7 @@ public class MAS {
         for (Integer i : count.keySet()) {
             if (count.get(i) == count.get(min)) {
                 minIndexes.add(i);
-            } else if (count.get(i) < count.get(min)) {
+            } else if (!count.containsKey(i) || count.get(i) < count.get(min)) {
                 minIndexes.clear();
                 minIndexes.add(i);
                 min = i;
@@ -162,10 +166,6 @@ public class MAS {
     }
 
     public void algo() {
-        HashSet<Integer> totalSet = new HashSet<Integer>();
-        for (int i = 0; i < graph.length; i++) {
-            totalSet.add(i);
-        }
         HashSet<Integer> minIndexes = getMin(totalSet);
         // int min = table[0][0];
         // HashSet<Integer> minIndexes = new HashSet<Integer>();
@@ -179,21 +179,23 @@ public class MAS {
         //         min = table[i][0];
         //     }
         // }
-        System.out.println("minIndexes is: " + minIndexes);
+        System.out.println("First min Out set is: " + minIndexes);
         if (minIndexes.size() == 1) {
             for (Integer i : minIndexes) {
-                q.add(i);
+                if (totalSet.contains(i)) {
+                    q.add(i);
+                }
             }
         } else {
-            breakTie(minIndexes);
+            recursive(minIndexes);
         }
-        System.out.print("q is: ");
-        System.out.println(q);
 
         while (!totalSet.isEmpty()) {
             if (totalSet.size() == 1) {
                 for (Integer i : totalSet) {
-                    q.add(i);
+                    if (totalSet.contains(i)) {
+                        q.add(i);
+                    }
                 }
             }
             if (q.isEmpty()) {
@@ -213,7 +215,9 @@ public class MAS {
                 if (tempSet != null && tempSet.size() > 0) {
                     if (tempSet.size() == 1) {
                         for (Integer i : tempSet) {
-                            q.add(i);
+                            if (totalSet.contains(i)) {
+                                q.add(i);
+                            }
                         }
                     } else {
                         recursive(tempSet);
@@ -224,7 +228,11 @@ public class MAS {
         for (int i = 0; i < answer.size(); i++) {
             answer.add(answer.poll() + 1);
         }
-        System.out.println(answer);
+        Iterator<Integer> it = answer.descendingIterator();
+        while (it.hasNext()) {
+            realanswer.add(it.next());
+        }
+        System.out.println(realanswer);
     }
 
     public void recursive(HashSet<Integer> set) {
@@ -332,10 +340,14 @@ public class MAS {
     }
 
     public void breakTie(HashSet<Integer> set) {
-        System.out.println("from here");
-        System.out.println(set);
         HashMap<Integer, HashSet<Integer>> rin = new HashMap<Integer, HashSet<Integer>>();
         HashMap<Integer, HashSet<Integer>> rout = new HashMap<Integer, HashSet<Integer>>();
+        for (Integer i : set) {
+            HashSet<Integer> temp = new HashSet<Integer>();
+            rin.put(i,temp);
+            temp = new HashSet<Integer>();
+            rout.put(i, temp);
+        }
         for (Integer i : set) {
             for (Integer j : set) {
                 if (in.get(i) != null && in.get(i).contains(j)) {
@@ -442,7 +454,7 @@ public class MAS {
     } 
   
     public static void main(String[] args) {
-        MAS foo = new MAS(101);
+        MAS foo = new MAS(5);
         foo.setUp();
     }
 }
