@@ -238,7 +238,6 @@ public class MAS {
     }
 
     public void recursive(HashSet<Integer> set) {
-        System.out.println(set);
         if (set.isEmpty()) {
             return;
         }
@@ -275,6 +274,11 @@ public class MAS {
                 }
             }
         }
+        System.out.println("-----");
+        System.out.println(noEdge);
+        System.out.println(set);
+        System.out.println(rin);
+        System.out.println(rout);
         if (noEdge) {
             Queue<Integer> rq = new LinkedList<Integer>();
             for (Integer i : set) {
@@ -301,6 +305,7 @@ public class MAS {
             for (Integer i : rq) {
                 q.add(i);
             }
+            System.out.println(rq);
         } else {
             HashSet<Integer> maxInNodes = new HashSet<Integer>();
             Queue<Integer> rq = new LinkedList<Integer>();
@@ -411,7 +416,6 @@ public class MAS {
        while (valueIt.hasNext()) {
            Integer val = (Integer) valueIt.next();
            Iterator keyIt = mapKeys.iterator();
-           System.out.println("sort");
 
            while (keyIt.hasNext()) {
                Object key = keyIt.next();
