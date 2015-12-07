@@ -3,3 +3,6 @@ instances/
 .DS_Store
 *.pdf
 *.out
+*.in
+*.txt
+README
