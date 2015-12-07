@@ -2,3 +2,4 @@ instances/
 *.class
 .DS_Store
 *.pdf
+*.out
